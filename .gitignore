@@ -1,0 +1,59 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.cache/
+.pytest_cache/
+.coverage
+*.log
+
+# Virtual env
+venv/
+.venv/
+ENV/
+env/
+.envrc
+pip-wheel-metadata/
+*.lock
+
+# Jupyter / IPython
+.ipynb_checkpoints/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# IDE / Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Docker
+*.pid
+*.seed
+docker-compose.override.yml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# MyPy / Lint
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Test / Coverage
+htmlcov/
+.tox/
+.nox/
+.pyre/
+.pytype/

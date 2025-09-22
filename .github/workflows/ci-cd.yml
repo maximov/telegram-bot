@@ -1,0 +1,70 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ]     # Запускать при пуше в main
+  pull_request:              # Проверять PR
+
+jobs:
+  lint-test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run linters
+        run: |
+          black --check .
+          isort --check-only .
+          flake8 .
+
+      - name: Run tests
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
+        run: pytest --maxfail=1 --disable-warnings -q
+
+  deploy:
+    needs: lint-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'   # Деплой только с main
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            cd ~/telegram-bot || git clone git@github.com:${{ github.repository }} ~/telegram-bot
+            cd ~/telegram-bot
+            git pull origin main
+            docker compose down
+            docker compose up -d --build
