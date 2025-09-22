@@ -1,9 +1,9 @@
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
 
 main_keyboard = ReplyKeyboardMarkup(
     keyboard=[
         [KeyboardButton(text="История сообщений")],
-        [KeyboardButton(text="ℹПомощь")]
+        [KeyboardButton(text="ℹПомощь")],
     ],
-    resize_keyboard=True
+    resize_keyboard=True,
 )
