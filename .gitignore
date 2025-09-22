@@ -57,3 +57,4 @@ htmlcov/
 .nox/
 .pyre/
 .pytype/
+.ssh/
