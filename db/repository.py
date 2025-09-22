@@ -30,6 +30,4 @@ async def init_db():
 async def save_message(user_id: int, text: str):
     async with _pool.acquire() as conn:
         query = "INSERT INTO messages(user_id, text) VALUES ($1, $2)"
-        await conn.execute(
-            query, user_id, text
-        )
+        await conn.execute(query, user_id, text)
